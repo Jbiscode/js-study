@@ -1,6 +1,6 @@
 // CORE_CONCEPTS 내에서 불러와서 필요없어짐
 // import componentsImg from "./assets/components.png";
-import { useState } from "react";
+import { Children, useState } from "react";
 import { CORE_CONCEPTS, EXAMPLES } from "./data";
 import Header from "./components/Header/Header.jsx";
 import CoreConcept from "./components/CoreConcepts.jsx";
@@ -33,10 +33,14 @@ function App() {
                 <section id="core-concepts">
                     <h2>Core Concepts</h2>
                     <ul>
-                        <CoreConcept title={CORE_CONCEPTS[0].title} description={CORE_CONCEPTS[0].description} image={CORE_CONCEPTS[0].image}></CoreConcept>
+                        {/* // map을 이용해서 반복문을 돌릴 수 있음 */}
+                        {CORE_CONCEPTS.map((conceptItem) => (
+                            <CoreConcept key={conceptItem.title} {...conceptItem}></CoreConcept>
+                        ))}
+                        {/* <CoreConcept title={CORE_CONCEPTS[0].title} description={CORE_CONCEPTS[0].description} image={CORE_CONCEPTS[0].image}></CoreConcept>
                         <CoreConcept {...CORE_CONCEPTS[1]}></CoreConcept>
                         <CoreConcept {...CORE_CONCEPTS[2]}></CoreConcept>
-                        <CoreConcept {...CORE_CONCEPTS[3]}></CoreConcept>
+                        <CoreConcept {...CORE_CONCEPTS[3]}></CoreConcept> */}
                     </ul>
                 </section>
                 <section id="examples">
