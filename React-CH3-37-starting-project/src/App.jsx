@@ -42,10 +42,10 @@ function App() {
                 <section id="examples">
                     <h2>Examples</h2>
                     <menu>
-                        <TabButton onSelect={() => HandleSelect("components")}>Components</TabButton>
-                        <TabButton onSelect={() => HandleSelect("jsx")}>JSX</TabButton>
-                        <TabButton onSelect={() => HandleSelect("props")}>Props</TabButton>
-                        <TabButton onSelect={() => HandleSelect("state")}>State</TabButton>
+                        <TabButton isSelected={selectedTopic==="components"} onSelect={() => HandleSelect("components")}>Components</TabButton>
+                        <TabButton isSelected={selectedTopic==="jsx"} onSelect={() => HandleSelect("jsx")}>JSX</TabButton>
+                        <TabButton isSelected={selectedTopic==="props"} onSelect={() => HandleSelect("props")}>Props</TabButton>
+                        <TabButton isSelected={selectedTopic==="state"} onSelect={() => HandleSelect("state")}>State</TabButton>
                     </menu>
                     {/* 상황에 따라서 다른 컴포넌트를 불러오는 방법 : 삼항연산자 */}
                     {/* {!selectedTopic ? (
