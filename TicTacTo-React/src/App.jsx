@@ -34,10 +34,16 @@ function App() {
         gameBoard[row][col] = player;
     }
 
+    let winner = null;
     for(const combination of WINNING_COMBINATIONS){
-        const firstSquare
-        const secondSquare
-        const thirdSquare
+        const firstSquare = gameBoard[combination[0].row][combination[0].col];
+        const secondSquare = gameBoard[combination[1].row][combination[1].col];
+        const thirdSquare = gameBoard[combination[2].row][combination[2].col];
+
+        if(firstSquare && firstSquare===secondSquare && firstSquare===thirdSquare){
+            console.log("WINNER");
+            winner = firstSquare;
+        }
     }
 
     function handleSelectSquare(rowIndex, colIndex) {
@@ -71,6 +77,7 @@ function App() {
                         isActive={activePlayer === "O"}
                     ></Player>
                 </ol>
+                {winner && <p>{winner} is the winner</p>}
                 <GameBoard
                     onSelectSquare={handleSelectSquare}
                     board={gameBoard}
