@@ -1,9 +1,8 @@
 import { useState } from "react";
 
-import Header from './components/Header';
-import UserInput from './components/UserInput';
-import Results from './components/Results';
-
+import Header from "./components/Header";
+import UserInput from "./components/UserInput";
+import Results from "./components/Results";
 
 function App() {
   const [userInput, setUserInput] = useState({
@@ -12,22 +11,22 @@ function App() {
     expectedReturn: 4,
     duration: 10,
   });
-  
+
   function handleInputChange(inputIdentifier, newValue) {
     setUserInput((prevUserInput) => {
       return {
         ...prevUserInput,
-        [inputIdentifier]: newValue,
+        [inputIdentifier]: +newValue,
       };
     });
   }
-    return (
-        <>
-            <Header />
-            <UserInput onChange={handleInputChange} userInput={userInput}/>
-            <Results Input={userInput}/>
-        </>
-    );
+  return (
+    <>
+      <Header />
+      <UserInput onChange={handleInputChange} userInput={userInput} />
+      <Results Input={userInput} />
+    </>
+  );
 }
 
 export default App;
