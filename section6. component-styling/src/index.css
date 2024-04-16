@@ -80,7 +80,7 @@ button:focus {
   gap: 1rem;
 }
 
-.button {
+/* .button {
   padding: 1rem 2rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -93,7 +93,7 @@ button:focus {
 
 .button:hover {
   background-color: #f0920e;
-}
+} */
 
 .text-button {
   color: #f0b322;
@@ -102,4 +102,4 @@ button:focus {
 
 .text-button:hover {
   color: #f0920e;
-}
+} 
