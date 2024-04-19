@@ -21,6 +21,14 @@ function App() {
       };
     });
   }
+  function handleCancelAddProject() {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        currentAction: "nothing-selected",
+      };
+    });
+  }
 
   function handleAddProject(projectData) {
     setProjectsState((prevState) => {
@@ -41,7 +49,7 @@ function App() {
   if (projectsState.currentAction === "nothing-selected") {
     content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
   } else if (projectsState.currentAction === "add-project") {
-    content = <NewProject onAddClick={handleAddProject} />;
+    content = <NewProject onAddClick={handleAddProject} onCancelClick={handleCancelAddProject} />;
   }
   return (
     <>

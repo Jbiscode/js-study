@@ -2,8 +2,7 @@ import { useRef } from "react";
 import Input from "./Input";
 import Modal from "./Modal";
 
-
-export default function NewProject({onAddClick}) {
+export default function NewProject({ onAddClick, onCancelClick }) {
   const modal = useRef();
 
   const title = useRef();
@@ -28,19 +27,25 @@ export default function NewProject({onAddClick}) {
       title: enteredTitle,
       description: enteredDescription,
       duedate: enteredDueDate,
-    })
+    });
   }
 
   return (
     <>
-    <Modal ref={modal} buttonCaption="닫기">
-      <h2>입력값을 확인하세요</h2>
-      <p>뭔가를 빠트린거같아요!</p>
-    </Modal>
+      <Modal ref={modal} buttonCaption="닫기">
+        <h2 className="text-xl font-bold text-stone-700 my-4">
+          입력값을 확인하세요
+        </h2>
+        <p className="text-stone-600 mb-4">뭔가를 빠트린거같아요!</p>
+      </Modal>
       <div className="w-[35rem] mt-16">
         <menu className="flex items-center justify-end gap-4 my-4">
           <li>
-            <button className="text-stone-800 hover:text-stone-950">취소</button>
+            <button
+              className="text-stone-800 hover:text-stone-950"
+              onClick={onCancelClick}>
+              취소
+            </button>
           </li>
           <li>
             <button
