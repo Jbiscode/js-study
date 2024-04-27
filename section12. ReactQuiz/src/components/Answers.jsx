@@ -35,7 +35,8 @@ export default function Answers({
               onClick={() => {
                 handleSelectAnswer(answer);
               }}
-              className={cssClass}>
+              className={cssClass}
+              disabled={answerState != ""}>
               {answer}
             </button>
           </li>
