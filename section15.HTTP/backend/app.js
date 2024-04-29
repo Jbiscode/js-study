@@ -1,53 +1,55 @@
-import fs from 'node:fs/promises';
+import fs from "node:fs/promises";
 
-import bodyParser from 'body-parser';
-import express from 'express';
+import bodyParser from "body-parser";
+import express from "express";
 
 const app = express();
-
-app.use(express.static('images'));
+/**
+ * 이 코드는 'images' 디렉토리에 있는 모든 정적 파일을 웹 페이지에서 직접 액세스할 수 있도록 설정
+ */
+app.use(express.static("images"));
 app.use(bodyParser.json());
 
 // CORS
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*'); // allow all domains
-  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader("Access-Control-Allow-Origin", "*"); // allow all domains
+  res.setHeader("Access-Control-Allow-Methods", "GET, PUT");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   next();
 });
 
-app.get('/places', async (req, res) => {
-  const fileContent = await fs.readFile('./data/places.json');
+app.get("/places", async (req, res) => {
+  const fileContent = await fs.readFile("./data/places.json");
 
   const placesData = JSON.parse(fileContent);
 
   res.status(200).json({ places: placesData });
 });
 
-app.get('/user-places', async (req, res) => {
-  const fileContent = await fs.readFile('./data/user-places.json');
+app.get("/user-places", async (req, res) => {
+  const fileContent = await fs.readFile("./data/user-places.json");
 
   const places = JSON.parse(fileContent);
 
   res.status(200).json({ places });
 });
 
-app.put('/user-places', async (req, res) => {
+app.put("/user-places", async (req, res) => {
   const places = req.body.places;
 
-  await fs.writeFile('./data/user-places.json', JSON.stringify(places));
+  await fs.writeFile("./data/user-places.json", JSON.stringify(places));
 
-  res.status(200).json({ message: 'User places updated!' });
+  res.status(200).json({ message: "User places updated!" });
 });
 
 // 404
 app.use((req, res, next) => {
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return next();
   }
-  res.status(404).json({ message: '404 - Not Found' });
+  res.status(404).json({ message: "404 - Not Found" });
 });
 
 app.listen(3000);
