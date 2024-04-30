@@ -1,17 +1,19 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 
 import Places from "./components/Places.jsx";
 import Modal from "./components/Modal.jsx";
 import DeleteConfirmation from "./components/DeleteConfirmation.jsx";
 import logoImg from "./assets/logo.png";
 import AvailablePlaces from "./components/AvailablePlaces.jsx";
-import { updateUserPlaces } from "./http.js";
+import { updateUserPlaces, getUserPlaces } from "./http.js";
 import Error from "./components/Error.jsx";
 
 function App() {
   const selectedPlace = useRef();
-
+  const [isFetching, setIsFetching] = useState(false);
   const [userPlaces, setUserPlaces] = useState([]);
+  const [error, setError] = useState();
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [errorUpdatingPlaces, setErrorUpdatingPlaces] = useState();
 
@@ -26,7 +28,21 @@ function App() {
   function handleError() {
     setErrorUpdatingPlaces(null);
   }
-
+  useEffect(() => {
+    async function loadPlaces() {
+      setIsFetching(true);
+      try {
+        const places = await getUserPlaces();
+        setUserPlaces(places);
+      } catch (error) {
+        setError({
+          message: error.message || "불러오는데 실패했습니다. 다시 시도하세요.",
+        });
+      }
+      setIsFetching(false);
+    }
+    loadPlaces();
+  }, []);
   async function handleSelectPlace(selectedPlace) {
     setUserPlaces((prevPickedPlaces) => {
       if (!prevPickedPlaces) {
@@ -49,13 +65,28 @@ function App() {
     }
   }
 
-  const handleRemovePlace = useCallback(async function handleRemovePlace() {
-    setUserPlaces((prevPickedPlaces) =>
-      prevPickedPlaces.filter((place) => place.id !== selectedPlace.current.id)
-    );
+  const handleRemovePlace = useCallback(
+    async function handleRemovePlace() {
+      setUserPlaces((prevPickedPlaces) =>
+        prevPickedPlaces.filter(
+          (place) => place.id !== selectedPlace.current.id
+        )
+      );
+      try {
+        await updateUserPlaces(
+          userPlaces.filter((place) => place.id !== selectedPlace.current.id)
+        );
+      } catch (error) {
+        setUserPlaces(userPlaces);
+        setErrorUpdatingPlaces({
+          message: error.message || "삭제하는데 실패했습니다. 다시 시도하세요.",
+        });
+      }
 
-    setModalIsOpen(false);
-  }, []);
+      setModalIsOpen(false);
+    },
+    [userPlaces]
+  );
 
   return (
     <>
@@ -84,12 +115,17 @@ function App() {
         </p>
       </header>
       <main>
-        <Places
-          title="I'd like to visit ..."
-          fallbackText="Select the places you would like to visit below."
-          places={userPlaces}
-          onSelectPlace={handleStartRemovePlace}
-        />
+        {error && <Error title="불러오는데 에러발생" message={error.message} />}
+        {!error && (
+          <Places
+            title="I'd like to visit ..."
+            fallbackText="Select the places you would like to visit below."
+            isLoading={isFetching}
+            loadingText="Loading..."
+            places={userPlaces}
+            onSelectPlace={handleStartRemovePlace}
+          />
+        )}
 
         <AvailablePlaces onSelectPlace={handleSelectPlace} />
       </main>
