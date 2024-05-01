@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Input from "./Input";
 
 export default function Login() {
   // const [enteredEmail, setEnteredEmail] = useState("");
@@ -16,6 +17,9 @@ export default function Login() {
 
   const emailIsInvalid =
     enteredValues.email.isEdited && !enteredValues.email.value.includes("@");
+  const passwordIsInvalid =
+    enteredValues.password.isEdited &&
+    enteredValues.password.value.trim().length < 8;
 
   function handleSubmit(event) {
     event.preventDefault(); // 기본 제출 동작 방지
@@ -58,32 +62,27 @@ export default function Login() {
       <h2>Login</h2>
 
       <div className="control-row">
-        <div className="control no-margin">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            name="email"
-            onBlur={handleInputBlur}
-            onChange={handleInputChange}
-            value={enteredValues.email.value}
-          />
-          <div className="control-error">
-            {emailIsInvalid && <p>이메일 형식으로 입력해주세요.</p>}
-          </div>
-        </div>
+        <Input
+          label="Email"
+          id="email"
+          type="email"
+          name="email"
+          onBlur={handleInputBlur}
+          onChange={handleInputChange}
+          value={enteredValues.email.value}
+          error={emailIsInvalid && "이메일 형식이 아닙니다."}
+        />
 
-        <div className="control no-margin">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            onBlur={handleInputBlur}
-            onChange={handleInputChange}
-            value={enteredValues.password.value}
-          />
-        </div>
+        <Input
+          label="Password"
+          id="password"
+          type="password"
+          name="password"
+          onBlur={handleInputBlur}
+          onChange={handleInputChange}
+          value={enteredValues.password.value}
+          error={passwordIsInvalid && "비밀번호는 8자 이상이어야 합니다."}
+        />
       </div>
 
       <p className="form-actions">
