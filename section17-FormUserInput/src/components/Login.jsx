@@ -4,9 +4,18 @@ export default function Login() {
   // const [enteredEmail, setEnteredEmail] = useState("");
   // const [enteredPassword, setEnteredPassword] = useState("");
   const [enteredValues, setEnteredValues] = useState({
-    email: "",
-    password: "",
+    email: {
+      value: "",
+      isEdited: false,
+    },
+    password: {
+      value: "",
+      isEdited: false,
+    },
   });
+
+  const emailIsInvalid =
+    enteredValues.email.isEdited && !enteredValues.email.value.includes("@");
 
   function handleSubmit(event) {
     event.preventDefault(); // 기본 제출 동작 방지
@@ -14,8 +23,8 @@ export default function Login() {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
     console.log(data);
-    console.log("Email:", enteredValues.email);
-    console.log("Password", enteredValues.password);
+    console.log("Email:", enteredValues.email.value);
+    console.log("Password", enteredValues.password.value);
   }
 
   function handleInputChange(event) {
@@ -23,28 +32,26 @@ export default function Login() {
     setEnteredValues((prevState) => {
       return {
         ...prevState,
-        [target.name]: target.value,
+        [target.name]: {
+          value: target.value,
+          isEdited: false,
+        },
       };
     });
   }
 
-  // function handleEmailChange(event) {
-  //   setEnteredValues((prevState) => {
-  //     return {
-  //       ...prevState,
-  //       email: event.target.value,
-  //     };
-  //   });
-  // }
-
-  // function handlePasswordChange(event) {
-  //   setEnteredValues((prevState) => {
-  //     return {
-  //       ...prevState,
-  //       password: event.target.value,
-  //     };
-  //   });
-  // }
+  function handleInputBlur(event) {
+    const target = event.target;
+    setEnteredValues((prevState) => {
+      return {
+        ...prevState,
+        [target.name]: {
+          ...prevState[target.name],
+          isEdited: true,
+        },
+      };
+    });
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -57,9 +64,13 @@ export default function Login() {
             id="email"
             type="email"
             name="email"
+            onBlur={handleInputBlur}
             onChange={handleInputChange}
-            value={enteredValues.email}
+            value={enteredValues.email.value}
           />
+          <div className="control-error">
+            {emailIsInvalid && <p>이메일 형식으로 입력해주세요.</p>}
+          </div>
         </div>
 
         <div className="control no-margin">
@@ -68,8 +79,9 @@ export default function Login() {
             id="password"
             type="password"
             name="password"
+            onBlur={handleInputBlur}
             onChange={handleInputChange}
-            value={enteredValues.password}
+            value={enteredValues.password.value}
           />
         </div>
       </div>
