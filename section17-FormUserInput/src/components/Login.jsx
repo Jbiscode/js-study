@@ -1,60 +1,33 @@
-import { useState } from "react";
 import Input from "./Input";
+import { isEmail, isNotEmpty, hasMinLength } from "../util/validation.js";
+import { useInput } from "../hooks/useInput.js";
 
 export default function Login() {
-  // const [enteredEmail, setEnteredEmail] = useState("");
-  // const [enteredPassword, setEnteredPassword] = useState("");
-  const [enteredValues, setEnteredValues] = useState({
-    email: {
-      value: "",
-      isEdited: false,
-    },
-    password: {
-      value: "",
-      isEdited: false,
-    },
-  });
+  const {
+    value: emailValue,
+    hasError: emailHasError,
+    handleInputChange: handleEmailChange,
+    handleInputBlur: handleEmailBlur,
+  } = useInput("", (value) => isEmail(value) && isNotEmpty(value));
 
-  const emailIsInvalid =
-    enteredValues.email.isEdited && !enteredValues.email.value.includes("@");
-  const passwordIsInvalid =
-    enteredValues.password.isEdited &&
-    enteredValues.password.value.trim().length < 8;
+  const {
+    value: passwordValue,
+    hasError: passwordHasError,
+    handleInputChange: handlePasswordChange,
+    handleInputBlur: handlePasswordBlur,
+  } = useInput("", (value) => hasMinLength(value, 8));
 
   function handleSubmit(event) {
     event.preventDefault(); // 기본 제출 동작 방지
     const form = event.target;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
+    if (emailHasError || passwordHasError) {
+      return;
+    }
     console.log(data);
-    console.log("Email:", enteredValues.email.value);
-    console.log("Password", enteredValues.password.value);
-  }
-
-  function handleInputChange(event) {
-    const target = event.target;
-    setEnteredValues((prevState) => {
-      return {
-        ...prevState,
-        [target.name]: {
-          value: target.value,
-          isEdited: false,
-        },
-      };
-    });
-  }
-
-  function handleInputBlur(event) {
-    const target = event.target;
-    setEnteredValues((prevState) => {
-      return {
-        ...prevState,
-        [target.name]: {
-          ...prevState[target.name],
-          isEdited: true,
-        },
-      };
-    });
+    console.log("Email:", emailValue);
+    console.log("Password", passwordValue);
   }
 
   return (
@@ -67,10 +40,10 @@ export default function Login() {
           id="email"
           type="email"
           name="email"
-          onBlur={handleInputBlur}
-          onChange={handleInputChange}
-          value={enteredValues.email.value}
-          error={emailIsInvalid && "이메일 형식이 아닙니다."}
+          onBlur={handleEmailBlur}
+          onChange={handleEmailChange}
+          value={emailValue}
+          error={emailHasError && "이메일 형식이 아닙니다."}
         />
 
         <Input
@@ -78,10 +51,10 @@ export default function Login() {
           id="password"
           type="password"
           name="password"
-          onBlur={handleInputBlur}
-          onChange={handleInputChange}
-          value={enteredValues.password.value}
-          error={passwordIsInvalid && "비밀번호는 8자 이상이어야 합니다."}
+          onBlur={handlePasswordBlur}
+          onChange={handlePasswordChange}
+          value={passwordValue}
+          error={passwordHasError && "비밀번호는 8자 이상이어야 합니다."}
         />
       </div>
 
